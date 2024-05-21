@@ -11,7 +11,18 @@ sys_exit(void)
 {
   int n;
   argint(0, &n);
-  exit(n);
+  char path[32];
+  uint64 addr1;
+  argaddr(1,&addr1);
+  argstr(1, path, sizeof(path));
+  exit(n,(addr1 == 0)? 0: path);
+
+  // if in user.h change signature of exit and wait
+  // int n;
+  // char path[32];
+  // argint(0, &n);
+  // argstr(1, path, sizeof(path));
+  // exit(n,path);
   return 0;  // not reached
 }
 
@@ -20,7 +31,11 @@ sys_getpid(void)
 {
   return myproc()->pid;
 }
-
+uint64
+sys_memsize(void)
+{
+  return myproc()->sz;
+}
 uint64
 sys_fork(void)
 {
@@ -30,9 +45,10 @@ sys_fork(void)
 uint64
 sys_wait(void)
 {
-  uint64 p;
+  uint64 p, exit_msg_addr;
   argaddr(0, &p);
-  return wait(p);
+  argaddr(1, &exit_msg_addr);
+  return wait(p, exit_msg_addr);
 }
 
 uint64
@@ -89,8 +105,3 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
-
-uint64
-sys_memsize(void){
-  return myproc()->sz;
-}  // TODO 2.3

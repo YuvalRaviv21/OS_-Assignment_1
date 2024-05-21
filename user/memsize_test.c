@@ -12,7 +12,7 @@ main(int argc, char *argv[])
     printf("Memory usage after allocation: %d bytes\n", memsize());
     free(ptr);
     printf("Memory usage after release: %d bytes\n", memsize());
-    exit(0);
+    exit(0,0);
 }
 
 // TODO 2.5

@@ -167,7 +167,9 @@ main(void)
     }
     if(fork1() == 0)
       runcmd(parsecmd(buf));
-    wait(0);
+    char * exit_message = malloc(32);
+    wait(0,exit_message); //TODO 3.3
+    printf("%s\n",exit_message); //TODO 3.3
   }
   exit(0);
 }
