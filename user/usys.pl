@@ -37,3 +37,4 @@ entry("sbrk");
 entry("sleep");
 entry("uptime");
 entry("memsize"); #TODO 2.4
+entry("set_affinity_mask"); # TODO 5.7

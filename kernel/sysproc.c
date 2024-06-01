@@ -32,9 +32,15 @@ sys_getpid(void)
   return myproc()->pid;
 }
 uint64
-sys_memsize(void)
+sys_memsize(void)   // TODO 2.1
 {
   return myproc()->sz;
+}
+uint64 
+sys_set_affinity_mask(void) {    // TODO 5.5
+  int affinity_mask = 0;
+  argint(0, &affinity_mask);
+  return myproc()->affinity_mask;
 }
 uint64
 sys_fork(void)

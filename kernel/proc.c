@@ -55,6 +55,7 @@ procinit(void)
       initlock(&p->lock, "proc");
       p->state = UNUSED;
       p->kstack = KSTACK((int) (p - proc));
+      p->affinity_mask = 0;   // TODO 5.2
   }
 }
 
@@ -124,6 +125,7 @@ allocproc(void)
 found:
   p->pid = allocpid();
   p->state = USED;
+  p->affinity_mask = 0;   // TODO 5.2
 
   // Allocate a trapframe page.
   if((p->trapframe = (struct trapframe *)kalloc()) == 0){
@@ -169,6 +171,7 @@ freeproc(struct proc *p)
   p->killed = 0;
   p->xstate = 0;
   p->state = UNUSED;
+  p->affinity_mask = 0;   // TODO 5.2
 }
 
 // Create a user page table for a given process, with no user memory,
@@ -296,6 +299,8 @@ fork(void)
   }
   np->sz = p->sz;
 
+  np->affinity_mask = p->affinity_mask;   // TODO 5.3
+
   // copy saved user registers.
   *(np->trapframe) = *(p->trapframe);
 
@@ -344,7 +349,7 @@ reparent(struct proc *p)
 // An exited process remains in the zombie state
 // until its parent calls wait().
 void
-exit(int status,char* exit_msg) //TODO 3.1 Exit message
+exit(int status, char* exit_msg) //TODO 3.1 Exit message
 {
   struct proc *p = myproc();
 
@@ -466,17 +471,20 @@ scheduler(void)
 
     for(p = proc; p < &proc[NPROC]; p++) {
       acquire(&p->lock);
-      if(p->state == RUNNABLE) {
-        // Switch to chosen process.  It is the process's job
-        // to release its lock and then reacquire it
-        // before jumping back to us.
-        p->state = RUNNING;
-        c->proc = p;
-        swtch(&c->context, &p->context);
+      if (!(p->affinity_mask) || ((p->affinity_mask >> cpuid()) & 1)) {   // TODO 5.5
+        if(p->state == RUNNABLE) {
+          // Switch to chosen process.  It is the process's job
+          // to release its lock and then reacquire it
+          // before jumping back to us.
+          printf("CPU ID: %d, PID: %d\n", cpuid(), p->pid);   // TODO 5.6
+          p->state = RUNNING;
+          c->proc = p;
+          swtch(&c->context, &p->context);
 
-        // Process is done running for now.
-        // It should have changed its p->state before coming back.
-        c->proc = 0;
+          // Process is done running for now.
+          // It should have changed its p->state before coming back.
+          c->proc = 0;
+        }
       }
       release(&p->lock);
     }
