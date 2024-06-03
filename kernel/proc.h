@@ -91,8 +91,8 @@ struct proc {
   int killed;                  // If non-zero, have been killed
   int xstate;                  // Exit status to be returned to parent's wait
   char exit_msg[32];           // TODO 3.1 Exit message 
-  int affinity_mask;           // TODO 5.1
-  int effective_affinity_mask; // TODO 6.2 TO ASK!
+  int affinity_mask;           // TODO 5.1                            1101
+  int effective_affinity_mask; // TODO 6.2 TO ASK!                    1101
   int pid;                     // Process ID
 
   // wait_lock must be held when using this:

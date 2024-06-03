@@ -27,6 +27,16 @@ sys_exit(void)
 }
 
 uint64
+sys_get_affinity_mask(void)// TODO TEST
+{
+  return myproc()->affinity_mask;
+}
+uint64
+sys_get_effective_affinity_mask(void)// TODO TEST
+{
+  return myproc()->effective_affinity_mask;
+}
+uint64
 sys_getpid(void)
 {
   return myproc()->pid;
@@ -39,7 +49,14 @@ sys_memsize(void)   // TODO 2.1
 uint64 
 sys_set_affinity_mask(void) {    // TODO 5.5
   int affinity_mask = 0;
+  int effective_affinity_mask = 0;
   argint(0, &affinity_mask);
+  argint(0, &effective_affinity_mask);
+  // printf("\t affinity_mask = %d\n",affinity_mask1
+  acquire(&myproc()->lock);
+  myproc()->affinity_mask = affinity_mask; // TODO 5.5
+  myproc()->effective_affinity_mask = effective_affinity_mask; // TODO 6
+  release(&myproc()->lock);
   return myproc()->affinity_mask;
 }
 uint64

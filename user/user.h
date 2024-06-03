@@ -24,6 +24,8 @@ int sleep(int);
 int uptime(void);
 int memsize(void);
 int set_affinity_mask(int);
+int get_affinity_mask(void); // TODO TEST
+int get_effective_affinity_mask(void); // TODO TEST
 
 // ulib.c
 int stat(const char*, struct stat*);
