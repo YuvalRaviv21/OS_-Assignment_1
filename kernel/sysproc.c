@@ -59,6 +59,13 @@ sys_set_affinity_mask(void) {    // TODO 5.5
   release(&myproc()->lock);
   return myproc()->affinity_mask;
 }
+uint64 //TODO print
+sys_toggle_print_runnable(void)
+{
+  int state = !(myproc()->print_runnable);
+  myproc()->print_runnable = state;
+  return state;
+}
 uint64
 sys_fork(void)
 {

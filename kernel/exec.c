@@ -33,6 +33,7 @@ exec(char *path, char **argv)
   acquire(&p->lock);
   p->affinity_mask = 0;   // TODO 5.4
   p->effective_affinity_mask = 0;   // TODO 6.4
+  p->print_runnable = 0;// TODO print
   release(&p->lock);
 
   begin_op();

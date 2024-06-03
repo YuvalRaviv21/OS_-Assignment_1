@@ -57,6 +57,7 @@ void procinit(void)
     p->kstack = KSTACK((int)(p - proc));
     p->affinity_mask = 0;           // TODO 5.2
     p->effective_affinity_mask = 0; // TODO 6.2
+    p->print_runnable = 0;          // TODO print
   }
 }
 
@@ -130,6 +131,7 @@ found:
   p->state = USED;
   p->affinity_mask = 0;           // TODO 5.2
   p->effective_affinity_mask = 0; // TODO 6.2
+  p->print_runnable = 0;          // TODO print
 
   // Allocate a trapframe page.
   if ((p->trapframe = (struct trapframe *)kalloc()) == 0)
@@ -179,6 +181,7 @@ freeproc(struct proc *p)
   p->state = UNUSED;
   p->affinity_mask = 0;           // TODO 5.2
   p->effective_affinity_mask = 0; // TODO 6.2
+  p->print_runnable = 0 ;           // TODO print
 }
 
 // Create a user page table for a given process, with no user memory,
@@ -311,7 +314,7 @@ int fork(void)
 
   np->affinity_mask = p->affinity_mask;                     // TODO 5.3
   np->effective_affinity_mask = p->effective_affinity_mask; // TODO 6.3   we assume that fork make a perfect copy of the pcb for every field.
-
+  np -> print_runnable = p->print_runnable;              // TODO print
   // copy saved user registers.
   *(np->trapframe) = *(p->trapframe);
 
@@ -504,7 +507,9 @@ void scheduler(void)
           if (p->effective_affinity_mask == 0) // TODO 6.4
             p->effective_affinity_mask = p->affinity_mask;
           printjump:
+          if (p->print_runnable){
           printf("\033[34mCPU ID: %d, PID: %d\033[0m\n", cpuid(), p->pid); // TODO 5.6
+          }
           // Switch to chosen process.  It is the process's job
           // to release its lock and then reacquire it
           // before jumping back to us.

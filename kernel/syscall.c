@@ -105,6 +105,7 @@ extern uint64 sys_memsize(void);
 extern uint64 sys_set_affinity_mask(void);
 extern uint64 sys_get_affinity_mask(void);
 extern uint64 sys_get_effective_affinity_mask(void);
+extern uint64 sys_toggle_print_runnable(void);
 
 // An array mapping syscall numbers from syscall.h
 // to the function that handles the system call.
@@ -133,7 +134,8 @@ static uint64 (*syscalls[])(void) = {
 [SYS_memsize] sys_memsize,
 [SYS_set_affinity_mask] sys_set_affinity_mask,
 [SYS_get_affinity_mask] sys_get_affinity_mask,
-[SYS_get_effective_affinity_mask] sys_get_effective_affinity_mask
+[SYS_get_effective_affinity_mask] sys_get_effective_affinity_mask,
+[SYS_toggle_print_runnable] sys_toggle_print_runnable
 };
 
 void

@@ -93,6 +93,7 @@ struct proc {
   char exit_msg[32];           // TODO 3.1 Exit message 
   int affinity_mask;           // TODO 5.1                            1101
   int effective_affinity_mask; // TODO 6.2 TO ASK!                    1101
+  int print_runnable;          // TODO print
   int pid;                     // Process ID
 
   // wait_lock must be held when using this:
