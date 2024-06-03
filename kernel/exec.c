@@ -30,8 +30,10 @@ exec(char *path, char **argv)
   struct proghdr ph;
   pagetable_t pagetable = 0, oldpagetable;
   struct proc *p = myproc();
+  acquire(&p->lock);
   p->affinity_mask = 0;   // TODO 5.4
   p->effective_affinity_mask = 0;   // TODO 6.4
+  release(&p->lock);
 
   begin_op();
 

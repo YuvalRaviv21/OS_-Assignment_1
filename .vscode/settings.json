@@ -4,6 +4,8 @@
         "riscv.h": "c",
         "defs.h": "c",
         "cstdlib": "c",
-        "stat.h": "c"
+        "stat.h": "c",
+        "stdio.h": "c",
+        "spinlock.h": "c"
     },
 }

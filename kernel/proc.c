@@ -490,22 +490,24 @@ void scheduler(void)
   {
     // Avoid deadlock by ensuring that devices can interrupt.
     intr_on();
-
     for (p = proc; p < &proc[NPROC]; p++)
     {
       acquire(&p->lock);
-      if (!(p->affinity_mask) || ((p->effective_affinity_mask >> cpuid()) & 1)) // logic for 6.3
+      if ((p->affinity_mask == 0) || (p->effective_affinity_mask >> cpuid()) & 1) // logic for 6.3
       // if (!(p->affinity_mask) || ((p->affinity_mask >> cpuid()) & 1))    // logic for 5.2
-      {                                                                           // TODO 5.5
-        p->effective_affinity_mask = p->effective_affinity_mask - (1 << cpuid()); // TODO 6.3
-        if (p->effective_affinity_mask == 0) // TODO 6.4
-          p->effective_affinity_mask = p->affinity_mask; 
+      {
+        // printf("\033[32mCPU ID: %d, PROCESS = ( ID : %d , Affinity_mask : %d,Effective_Affinity_mask : %d)\033[0m\n", cpuid(), p->pid,p->affinity_mask,p->effective_affinity_mask); // TODO Test                                                                           // TODO 5.5
         if (p->state == RUNNABLE)
         {
+          if (p->affinity_mask == 0) goto printjump;
+          p->effective_affinity_mask = p->effective_affinity_mask - (1 << cpuid()); // TODO 6.3
+          if (p->effective_affinity_mask == 0) // TODO 6.4
+            p->effective_affinity_mask = p->affinity_mask;
+          printjump:
+          printf("\033[34mCPU ID: %d, PID: %d\033[0m\n", cpuid(), p->pid); // TODO 5.6
           // Switch to chosen process.  It is the process's job
           // to release its lock and then reacquire it
           // before jumping back to us.
-          printf("CPU ID: %d, PID: %d\n", cpuid(), p->pid); // TODO 5.6
           p->state = RUNNING;
           c->proc = p;
           swtch(&c->context, &p->context);
