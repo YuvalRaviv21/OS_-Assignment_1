@@ -24,3 +24,6 @@
 #define SYS_set_affinity_mask 23
 #define SYS_get_affinity_mask 24
 #define SYS_get_effective_affinity_mask 25
+#define SYS_toggle_print_runnable 26
+#define SYS_get_affinity_mask 24
+#define SYS_get_effective_affinity_mask 25

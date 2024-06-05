@@ -8,6 +8,7 @@ main(int argc, char *argv[])    // TODO 5.8     1010 - 0100
 {
   // printf("PID: %d %d %d\n", getpid(),get_affinity_mask(),get_effective_affinity_mask); // TODO Test
   printf("Start of Affinity_test\n");
+  toggle_print_runnable();
   set_affinity_mask(MASK);
   for (int i = 0 ; i < 200;i++){
     // printf("PID: %d %d %d\n", getpid(),get_affinity_mask(),get_effective_affinity_mask);  // TODO Test
